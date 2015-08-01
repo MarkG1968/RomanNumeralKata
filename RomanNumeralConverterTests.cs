@@ -74,6 +74,9 @@ namespace MarkG1968.RomanNumeralKata
         [TestInput(100, "C")]
         [TestInput(337, "CCCXXXVII")]
         [TestInput(500, "D")]
+        [TestInput(1415, "MCDXV")]
+        [TestInput(1968, "MCMLXVIII")]
+        [TestInput(2015, "MMXV")]
         public void ShouldConvertValue(int arabicValue, string romanNumeral)
         {
             sut.ConvertFrom(arabicValue).Should().Equal(romanNumeral);

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace MarkG1968.RomanNumeralKata
@@ -14,33 +12,19 @@ namespace MarkG1968.RomanNumeralKata
         {
             AssertArabicValueInRange(arabicValue);
 
-            StringBuilder romanNumeral = new StringBuilder();
+            StringBuilder valueInRomanNumerals = new StringBuilder();
 
-            RomanNumeral[] romanNumerals = new [] {
-                                        new RomanNumeral{arabicValue = 100, romanNumeral = "C"},
-                                        new RomanNumeral{arabicValue = 90, romanNumeral = "XC"},
-                                        new RomanNumeral{arabicValue = 50, romanNumeral = "L"},
-                                        new RomanNumeral{arabicValue = 40, romanNumeral = "XL"},
-                                        new RomanNumeral{arabicValue = 10, romanNumeral = "X"},
-                                        new RomanNumeral{arabicValue = 9, romanNumeral = "IX"},
-                                        new RomanNumeral{arabicValue = 5, romanNumeral = "V"},
-                                        new RomanNumeral{arabicValue = 4, romanNumeral = "IV"},
-                                        new RomanNumeral{arabicValue = 1, romanNumeral = "I"}
-                                    };
-            while(arabicValue > 0)
+            var residualArabicValue = arabicValue;
+
+            while(residualArabicValue > 0)
             {
-                foreach(var romanNumeralMapping in romanNumerals)
-                {
-                    if (arabicValue >= romanNumeralMapping.arabicValue)
-                    {
-                        romanNumeral.Append(romanNumeralMapping.romanNumeral);
-                        arabicValue = arabicValue - romanNumeralMapping.arabicValue;
-                        break;
-                    }
-                }
+                RomanNumeral nextBiggestRomanNumeral = new RomanNumerals().FindBiggestRomanNumeralIn(residualArabicValue);
+
+                valueInRomanNumerals.Append(nextBiggestRomanNumeral.romanNumeral);
+                residualArabicValue -= nextBiggestRomanNumeral.arabicValue;
             }
 
-            return romanNumeral.ToString();
+            return valueInRomanNumerals.ToString();
         }
 
         private static void AssertArabicValueInRange(int arabicValue)
@@ -54,6 +38,40 @@ namespace MarkG1968.RomanNumeralKata
             {
                 throw new ArgumentOutOfRangeException("arabicValue", String.Format("Value must be no more than {0}. Supplied value {1}", MaximumArabicValue, arabicValue));
             }
+        }
+    }
+
+    class RomanNumerals
+    {
+        RomanNumeral[] romanNumerals = new[] {
+                                        new RomanNumeral{arabicValue = 1000, romanNumeral = "M"},
+                                        new RomanNumeral{arabicValue = 900, romanNumeral = "CM"},
+                                        new RomanNumeral{arabicValue = 500, romanNumeral = "D"},
+                                        new RomanNumeral{arabicValue = 400, romanNumeral = "CD"},
+                                        new RomanNumeral{arabicValue = 100, romanNumeral = "C"},
+                                        new RomanNumeral{arabicValue = 90, romanNumeral = "XC"},
+                                        new RomanNumeral{arabicValue = 50, romanNumeral = "L"},
+                                        new RomanNumeral{arabicValue = 40, romanNumeral = "XL"},
+                                        new RomanNumeral{arabicValue = 10, romanNumeral = "X"},
+                                        new RomanNumeral{arabicValue = 9, romanNumeral = "IX"},
+                                        new RomanNumeral{arabicValue = 5, romanNumeral = "V"},
+                                        new RomanNumeral{arabicValue = 4, romanNumeral = "IV"},
+                                        new RomanNumeral{arabicValue = 1, romanNumeral = "I"}
+                                    };
+
+        public RomanNumeral FindBiggestRomanNumeralIn(int arabicValue)
+        {
+            RomanNumeral nextRomanNumeral = null;
+            foreach (var romanNumeralMapping in romanNumerals)
+            {
+                if (arabicValue >= romanNumeralMapping.arabicValue)
+                {
+                    nextRomanNumeral = romanNumeralMapping;
+                    break;
+                }
+            }
+
+            return nextRomanNumeral;
         }
     }
 
